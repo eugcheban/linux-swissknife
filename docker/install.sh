@@ -15,19 +15,25 @@ sudo apt install apt-transport-https ca-certificates curl software-properties-co
 
 echo "3. Add Docker’s Official GPG Key & Docker Repository..."
 # Currently, hard checking OS type
-if [ "$(lsb_release -si)" = 'Ubuntu' ]; then
-    echo 'This is ubuntu'
+
+release_number="$(lsb_release -rs)" # 22.04
+distributor_id="$(lsb_release -si | awk '{print tolower($0)}')" # ubuntu
+codename="$(lsb_release -c)" # jammy
+
+
+if [ distributor_id = 'ubuntu' && release_number = '22.04' ]; then
+    echo 'Installing docker for ubuntu 22.04...'
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu noble stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 else
-    echo 'This is not ubuntu'
+    echo 'Installation for your OS type\version are not awailable.'
 fi
 
 echo "4. Update Package Index..."
 sudo apt update
 
 echo "5. Install Docker Engine and Related Packages..."
-sudo apt install docker-ce docker-ce-cli containerd.io
+sudo sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 echo "6. Start and Enable Docker Service..."
 sudo systemctl start docker
