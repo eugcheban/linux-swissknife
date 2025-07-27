@@ -1,0 +1,11 @@
+    # downloaded from site
+    'vscode'
+    'discord'
+    'anki'
+
+
+
+    # configs
+    - vs-code "editor.glyphMargin": false, in .config/Code/User/settings.json
+
+# ...existing code...
